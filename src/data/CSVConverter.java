@@ -22,7 +22,6 @@ public class CSVConverter {
 	 */
 	public static void main(String[] args) throws IOException {
 		new CSVConverter();
-
 	}
 	
 	private CSVConverter() throws IOException {
@@ -38,15 +37,24 @@ public class CSVConverter {
 	}
 	
 	private void readFile(BufferedReader reader) throws IOException {
-		while (reader.readLine() != null) {
+		//System.out.println(reader.readLine());
+		boolean firstLine = true;
+//		while (reader.readLine() != null) {
+			while (reader.readLine() != null) {
+
 			String input = reader.readLine();
-			if (counter > 0) {
-//			if (counter > 0 && counter < 100) {
-				//System.out.println(str);
-				String output = processLine(input);
-				writeLine(output);
+			//System.out.println(input);
+			if (firstLine) {
+				firstLine = false;
+				continue;
 			}
 			counter++;
+//			if (counter < 10) {
+//				System.out.println(input);
+				String output = processLine(input);
+				writeLine(output);
+			
+//			}
 		}
 		reader.close();
 	}
@@ -70,7 +78,7 @@ public class CSVConverter {
 		if (curUserID != prevUserID) {
 			timeGap = 0;
 			mins = 0;
-			sessionID++;
+			sessionID = 0;
 		} else {
 			boolean longGap = compareTimeStamps();
 			mins = timeGap/1000/60;
