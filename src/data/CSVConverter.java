@@ -54,7 +54,6 @@ public class CSVConverter {
 	private void writeLine(String output) throws IOException {
 		bufferedWriter.write(output);
 		bufferedWriter.newLine();
-		
 	}
 
 	private String processLine(String line) {
@@ -87,25 +86,18 @@ public class CSVConverter {
 				+ queryTime + ","
 				+ curTimestamp + ","
 				+ timeGap + ","
-				//+ mins + ","
 				+ curEpoc;
-		/*
-		 * System.out.println(processedLine);
-		 * */
 		return processedLine;
 	}
 	
 	private boolean compareTimeStamps() {
 		if (prevTimestamp == null) {
 			timeGap = 0;
-			//System.out.println("timeGap " + timeGap + " mins " + timeGap);
 			return false;
 		}
-		
 		long prevEpoc = prevTimestamp.getTime();
 		timeGap = curEpoc - prevEpoc;
 		long mins = timeGap/1000/60;
-		//System.out.println("timeGap " + timeGap + " mins " + mins);
 		if (mins >= 30) {
 			return true;
 		} else {
@@ -114,21 +106,8 @@ public class CSVConverter {
 	}
 
 	private void convertTimeStamp(String time) {
-		prevTimestamp = curTimestamp;
-//		//System.out.println(time);
-//		int year = Integer.parseInt(time.substring(0, 4));
-//		int month = Integer.parseInt(time.substring(5, 7));
-//		int date = Integer.parseInt(time.substring(8, 10));
-//		int hour = Integer.parseInt(time.substring(11, 13));
-//		int minute = Integer.parseInt(time.substring(14, 16));
-//		int second = Integer.parseInt(time.substring(17, 19));
-//		int nano = 0;
-//		//System.out.println(year + ";" + month + ";" + date 
-//		+ ";" + hour + ";" + minute + ";" + second);
-		
+		prevTimestamp = curTimestamp;		
 		curTimestamp = Timestamp.valueOf(time);
 		curEpoc = curTimestamp.getTime();
 	}
-	
-
 }
