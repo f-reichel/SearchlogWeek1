@@ -2,12 +2,12 @@ package data;
 
 import java.io.*;
 import java.sql.Timestamp;
+import java.util.Scanner;
 
 public class CSVConverter {
 
-	private BufferedReader bufferedReader;
 	private BufferedWriter bufferedWriter;
-	private FileReader fileReader;
+	private Scanner scanner;
 	private FileWriter fileWriter;
 	private File inputFile, outputFile;
 	private Timestamp prevTimestamp, curTimestamp;
@@ -27,52 +27,52 @@ public class CSVConverter {
 	private CSVConverter() throws IOException {
 		inputFile = new File(INPUT_PATH);
 		outputFile = new File(OUTPUT_PATH);
-		fileReader = new FileReader(inputFile);
+		scanner = new Scanner(inputFile);
 		fileWriter = new FileWriter(outputFile);
-		bufferedReader = new BufferedReader(fileReader);
 		bufferedWriter = new BufferedWriter(fileWriter);
 		
-		readFile(bufferedReader);
+		scanFile(scanner);
 		bufferedWriter.close();
 	}
 	
-	private void readFile(BufferedReader reader) throws IOException {
-		//System.out.println(reader.readLine());
+	private void scanFile(Scanner sc) throws IOException {
 		boolean firstLine = true;
-//		while (reader.readLine() != null) {
-			while (reader.readLine() != null) {
-
-			String input = reader.readLine();
-			//System.out.println(input);
+		while (sc.hasNextLine()) {
+			String[] input = sc.nextLine().split("\t");
+			
 			if (firstLine) {
 				firstLine = false;
+				writeLine("sessionId," +
+						"userId," +
+						"query," +
+						"rawdate," +
+						"date," +
+						"timegap," +
+						"epoc");
 				continue;
-			}
+			}			
 			counter++;
-//			if (counter < 10) {
-//				System.out.println(input);
-				String output = processLine(input);
-				writeLine(output);
 			
-//			}
+			String output = parseLine(input);
+			writeLine(output);
 		}
-		reader.close();
+		
+		sc.close();
 	}
 	
 	private void writeLine(String output) throws IOException {
 		bufferedWriter.write(output);
 		bufferedWriter.newLine();
 	}
-
-	private String processLine(String line) {
+	
+	private String parseLine(String[] in) {
 		prevUserID = curUserID;
-		String[] data = line.split("\t");
-		curUserID = Integer.parseInt(data[0]);
-		String query = data[1];
-		String queryTime = data[2];
-		if (data.length == 5) {
-			String itemRank = data[3];
-			String clickURL = data[4];
+		curUserID = Integer.parseInt(in[0]);
+		String query = in[1];
+		String queryTime = in[2];
+		if (in.length == 5) {
+			String itemRank = in[3];
+			String clickURL = in[4];
 		}
 		convertTimeStamp(queryTime);		
 		if (curUserID != prevUserID) {
@@ -87,6 +87,7 @@ public class CSVConverter {
 				mins = 0;
 				sessionID++;			
 			}
+			
 		}
 		String processedLine = sessionID + ","
 				+ curUserID + "," 
@@ -97,7 +98,7 @@ public class CSVConverter {
 				+ curEpoc;
 		return processedLine;
 	}
-	
+
 	private boolean compareTimeStamps() {
 		if (prevTimestamp == null) {
 			timeGap = 0;
