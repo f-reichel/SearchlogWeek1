@@ -75,3 +75,17 @@ daily_counts_mat = get_daily_counts(samplequeries,sampleusers,days);
 v= c(daily_counts_mat)
 hist(v[v<200])
 summary(v[v<200])
+
+hist(v[v>100])
+length(v[v>100])
+
+# out of
+length(v)
+
+# Let's take a look at those days and get a list of the users who submitted these:
+Biguser_wh = which(daily_counts_mat>100, arr.ind=TRUE)
+
+# for those users how many days have more than 100 queries?
+bdq = as.matrix(table(Biguser_wh[,1]))
+head(bdq)
+

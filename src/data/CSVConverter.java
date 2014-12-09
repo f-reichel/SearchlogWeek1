@@ -12,9 +12,17 @@ public class CSVConverter {
 	private File inputFile, outputFile;
 	private Timestamp prevTimestamp, curTimestamp;
 	private int prevUserID, curUserID, sessionID, counter;
-	private long timeGap, curEpoc, mins;	
-	private static final String INPUT_PATH = "/home/pacman/Documents/UniR/MEI/WS1415/SearchlogAnalyse/AOL-user-ct-collection/user-ct-test-collection-01.txt";
-	private static final String OUTPUT_PATH = "/home/pacman/Documents/UniR/MEI/WS1415/SearchlogAnalyse/AOL-user-ct-collection/user-ct-test-collection-01.csv";
+	private long timeGap, curEpoc, mins;
+	private double score;	
+	private static final String INPUT_PATH = 
+			"/home/pacman/Documents/UniR/MEI/WS1415/SearchlogAnalyse/AOL-user-ct-collection/" +
+			"user-ct-test-collection-01.txt";
+	private static final String OUTPUT_PATH = 
+			"/home/pacman/Documents/UniR/MEI/WS1415/SearchlogAnalyse/AOL-user-ct-collection/" +
+			"user-ct-test-collection-01.csv";
+	private static final String OUTPUT_BOTS = 
+			"/home/pacman/Documents/UniR/MEI/WS1415/SearchlogAnalyse/AOL-user-ct-collection/" +
+			"user-ct-test-collection-01-BOTS.csv";
 	
 	/**
 	 * @param args
@@ -42,16 +50,17 @@ public class CSVConverter {
 			
 			if (firstLine) {
 				firstLine = false;
-				writeLine("sessionId," +
-						"userId," +
-						"query," +
-						"rawdate," +
-						"date," +
-						"timegap," +
-						"epoc");
+				writeLine("userId" + "\t"
+						+ "sessionId" + "\t"
+						+ "score" + "\t"
+						+ "date" + "\t"
+						+ "timegap" + "\t"
+						+ "query");// + "\t"
+//						+ "rawdate" + "\t"
+				//		+ "epoc");
 				continue;
 			}			
-			counter++;
+		//	counter++;
 			
 			String output = parseLine(input);
 			writeLine(output);
@@ -65,20 +74,17 @@ public class CSVConverter {
 		bufferedWriter.newLine();
 	}
 	
-	private String parseLine(String[] in) {
+	private String parseLine(String[] in) throws IOException {
 		prevUserID = curUserID;
 		curUserID = Integer.parseInt(in[0]);
 		String query = in[1];
 		String queryTime = in[2];
-		if (in.length == 5) {
-			String itemRank = in[3];
-			String clickURL = in[4];
-		}
 		convertTimeStamp(queryTime);		
 		if (curUserID != prevUserID) {
 			timeGap = 0;
 			mins = 0;
 			sessionID = 0;
+			//writeLine("");
 		} else {
 			boolean longGap = compareTimeStamps();
 			mins = timeGap/1000/60;
@@ -89,13 +95,19 @@ public class CSVConverter {
 			}
 			
 		}
-		String processedLine = sessionID + ","
-				+ curUserID + "," 
-				+ query + ","
-				+ queryTime + ","
-				+ curTimestamp + ","
-				+ timeGap + ","
-				+ curEpoc;
+		String processedLine = curUserID + "\t"
+				+ sessionID + "\t"
+				+ score + "\t"
+				+ queryTime + "\t"
+//				+ curTimestamp + "\t"
+				+ timeGap + "\t"
+				+ query;// + "\t"
+//				+ curEpoc;
+		if (in.length == 5) {
+			String itemRank = in[3];
+			String clickURL = in[4];
+			processedLine += "\t" + itemRank + "\t" + clickURL;
+		}
 		return processedLine;
 	}
 

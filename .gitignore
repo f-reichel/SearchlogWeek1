@@ -12,5 +12,7 @@
 hs_err_pid*
 
 # log files
-logfile.csv
+*.csv
 /bin/
+/r-scripts/.RData
+*.kate-swp
