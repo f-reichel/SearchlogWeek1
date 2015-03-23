@@ -1,0 +1,1 @@
+# dbWriteTable(conn = con, name = 'set01', value = as.data.frame(read.table("/home/pacman/Documents/UniR/MEI/WS1415/SearchlogAnalyse/AOL-user-ct-collection/user-ct-test-collection-01-short.csv",header=TRUE,sep=",")))

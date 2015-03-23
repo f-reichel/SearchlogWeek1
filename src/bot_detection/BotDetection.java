@@ -58,8 +58,8 @@ public class BotDetection {
 		int currID = 0;
 		ArrayList<String[]> list = new ArrayList<String[]>();
 		// while (sc.hasNextLine()) {
-		while (counter < 100) {
-			//System.out.println(sc.nextLine());
+		while (counter < 27) {
+			System.out.println(counter + " 1# " + sc.nextLine());
 			String[] input = sc.nextLine().split("\t");
 
 			if (firstLine) {
@@ -76,7 +76,7 @@ public class BotDetection {
 			if (prevID == currID) {
 				
 				list.add(input);
-				//System.out.println(list.size());
+				//System.out.println("(79)" + list.size());
 			} else {
 				if (firstID) {
 					firstID = false;
@@ -98,9 +98,9 @@ public class BotDetection {
 
 	private void checkForBots(ArrayList<String[]> list) {
 		userObject = new UserObject(list);
-		
-//		userObject.splitSessions();
-//		userObject.printList();
+		if(userObject.checkForFrequentQueries()) {
+			userObject.printUserObject();
+		}
 	}
 
 	private String parseLine(String[] in) throws IOException {

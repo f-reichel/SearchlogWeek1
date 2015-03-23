@@ -13,13 +13,15 @@ public class CSVConverter {
 	private Timestamp prevTimestamp, curTimestamp;
 	private int prevUserID, curUserID, sessionID, counter;
 	private long timeGap, curEpoc, mins;
-	private double score;	
+	private double score;
+	private static final String SEP = ",";
+	private static final String QUOT = "\"";
 	private static final String INPUT_PATH = 
 			"/home/pacman/Documents/UniR/MEI/WS1415/SearchlogAnalyse/AOL-user-ct-collection/" +
 			"user-ct-test-collection-01.txt";
 	private static final String OUTPUT_PATH = 
 			"/home/pacman/Documents/UniR/MEI/WS1415/SearchlogAnalyse/AOL-user-ct-collection/" +
-			"user-ct-test-collection-01.csv";
+			"user_ct_test_collection_01.csv";
 	private static final String OUTPUT_BOTS = 
 			"/home/pacman/Documents/UniR/MEI/WS1415/SearchlogAnalyse/AOL-user-ct-collection/" +
 			"user-ct-test-collection-01-BOTS.csv";
@@ -50,13 +52,15 @@ public class CSVConverter {
 			
 			if (firstLine) {
 				firstLine = false;
-				writeLine("userId" + "\t"
-						+ "sessionId" + "\t"
-						+ "score" + "\t"
-						+ "date" + "\t"
-						+ "timegap" + "\t"
-						+ "query");// + "\t"
-//						+ "rawdate" + "\t"
+				writeLine("\"userId\"" + SEP
+						+ "\"sessionId\"" + SEP
+//						+ "score" + SEP
+						+ "\"date\"" + SEP
+						+ "\"timegap\"" + SEP
+						+ "\"epoc\"" + SEP
+						+ "\"query\"" + SEP
+						+ "\"itemRank\"" + SEP
+						+ "\"clickUrl\"");
 				//		+ "epoc");
 				continue;
 			}			
@@ -95,19 +99,25 @@ public class CSVConverter {
 			}
 			
 		}
-		String processedLine = curUserID + "\t"
-				+ sessionID + "\t"
-				+ score + "\t"
-				+ queryTime + "\t"
-//				+ curTimestamp + "\t"
-				+ timeGap + "\t"
-				+ query;// + "\t"
-//				+ curEpoc;
+		String processedLine = QUOT + curUserID + QUOT + SEP
+				+ QUOT + sessionID + QUOT + SEP
+//				+ score + SEP
+				+ QUOT + queryTime + QUOT + SEP
+//				+ curTimestamp + SEP
+				+ QUOT + timeGap + QUOT + SEP
+				+ QUOT + curEpoc + QUOT + SEP
+				+ QUOT + query + QUOT;
 		if (in.length == 5) {
 			String itemRank = in[3];
 			String clickURL = in[4];
-			processedLine += "\t" + itemRank + "\t" + clickURL;
+			processedLine += SEP + QUOT + itemRank + QUOT + SEP + QUOT + clickURL + QUOT;
+		} else if (in.length == 4) {
+				String itemRank = in[3];
+				processedLine += SEP + QUOT + itemRank + QUOT + SEP + QUOT + QUOT;
+		} else {
+			processedLine += SEP + QUOT + QUOT + SEP + QUOT + QUOT;
 		}
+		
 		return processedLine;
 	}
 

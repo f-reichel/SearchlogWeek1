@@ -1,7 +1,6 @@
 # start by loading in the data file you created
-queries = read.table(
-  "/home/pacman/Documents/UniR/MEI/WS1415/SearchlogAnalyse/AOL-user-ct-collection/user-ct-test-collection-01.csv"
-  ,header=TRUE,sep=",")
+#queries = read.table("/home/pacman/Documents/UniR/MEI/WS1415/SearchlogAnalyse/AOL-user-ct-collection/user-ct-test-collection-01.csv",header=TRUE,sep=",")
+queries = dbReadTable(conn = con,name = 'user_ct_test_collection_01');
 
 # We need to handle dates
 #set epoc GMT
