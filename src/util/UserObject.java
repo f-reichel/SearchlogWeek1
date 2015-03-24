@@ -4,26 +4,26 @@ import java.util.ArrayList;
 
 public class UserObject {
 
-	private ArrayList<String[]> completeList;
+	private ArrayList<QueryObject> completeList;
 	private ArrayList<SessionObject> sessionList;
 	private int prevSession, currSession;
 
-	public UserObject(ArrayList<String[]> list) {
+	public UserObject(ArrayList<QueryObject> list) {
 		this.completeList = list;
 		splitSessions();
 	}
 
 	private void splitSessions() {
 		boolean firstSession = true;
-		ArrayList<String[]> sessionBuffer = new ArrayList<String[]>();
+		ArrayList<QueryObject> sessionBuffer = new ArrayList<QueryObject>();
 		sessionList = new ArrayList<SessionObject>();
-		for (String[] strArr : completeList) {
+		for (QueryObject queryObject : completeList) {
 			//System.out.println("prevSession " + prevSession + " currSession " + currSession);
 			prevSession = currSession;
-			currSession = Integer.parseInt(strArr[1]);
+			currSession = queryObject.getSessionId();
 			if (firstSession) {
 				firstSession = false;
-				sessionBuffer.add(strArr);
+				sessionBuffer.add(queryObject);
 				continue;
 			}
 			if (prevSession == currSession) {
@@ -32,7 +32,7 @@ public class UserObject {
 //					sessionBuffer.add(strArr);
 //					continue;
 //				}
-				sessionBuffer.add(strArr);
+				sessionBuffer.add(queryObject);
 			} else {
 //				if (firstSession) {
 //					firstSession = false;
@@ -48,12 +48,8 @@ public class UserObject {
 	public void printUserObject() {
 		//System.out.println("User: " + completeList.get(0)[0] + "\t" + "size: "
 		//		+ completeList.size());
-		for (String[] row : completeList) {
-			String l = "";
-			for (String str : row) {
-				l += str + "\t";
-			}
-			//System.out.println(l);
+		for (QueryObject row : completeList) {
+			System.out.println(row.printContent());
 		}
 	}
 
@@ -78,20 +74,20 @@ public class UserObject {
 		return false;
 	}
 
-	public void printRepeatedQueries() {
-		boolean firstRun = true;
-		for (String[] row : completeList) {
-			String l = "";
-			for (String str : row) {
-				l += str + "\t";
-			}
-			if (firstRun) {
-				continue;
-			}
-			// if
-
-			//System.out.println(l);
-		}
-	}
+//	public void printRepeatedQueries() {
+//		boolean firstRun = true;
+//		for (String[] row : completeList) {
+//			String l = "";
+//			for (String str : row) {
+//				l += str + "\t";
+//			}
+//			if (firstRun) {
+//				continue;
+//			}
+//			// if
+//
+//			//System.out.println(l);
+//		}
+//	}
 
 }

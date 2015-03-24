@@ -5,19 +5,19 @@ import java.util.logging.Logger;
 
 public class SessionObject {
 	
-	private ArrayList<String[]> list;
+	private ArrayList<QueryObject> list;
 	private int currGap, prevGap;
 	
-	public SessionObject(ArrayList<String[]> list) {
-		this.list = list;
+	public SessionObject(ArrayList<QueryObject> sessionBuffer) {
+		this.list = sessionBuffer;
 	}
 	
 	public boolean checkForFrequency() {
 		boolean firstGap = true;
 		
-		for (String[] strArr : list) {
+		for (QueryObject queryObject : list) {
 //			prevGap = currGap;
-			currGap = Integer.parseInt(strArr[4]);
+			currGap = queryObject.getTimeGap();
 			if (firstGap) {
 				firstGap = false;
 				continue;
@@ -35,12 +35,9 @@ public class SessionObject {
 	public void printSession() {
 		//System.out.println("User: " + list.get(0)[0] + "\t" + "Session: " + list.get(0)[1] + "\t" + "size: "
 		//		+ list.size());
-		for (String[] row : list) {
-			String l = "";
-			for (String str : row) {
-				l += str + "\t";
-			}
-			//System.out.println(l);
+		for (QueryObject row : list) {
+			
+			System.out.println(row.printContent());
 			
 		}
 	}
