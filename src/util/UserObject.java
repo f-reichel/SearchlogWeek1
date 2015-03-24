@@ -46,11 +46,13 @@ public class UserObject {
 	}
 
 	public void printUserObject() {
-		//System.out.println("User: " + completeList.get(0)[0] + "\t" + "size: "
-		//		+ completeList.size());
 		for (QueryObject row : completeList) {
 			System.out.println(row.printContent());
+			}
 		}
+	
+	public ArrayList<QueryObject> getAllQueries() {
+		return completeList;
 	}
 
 	// public ArrayList<SessionObject> splitSessions() {
@@ -66,7 +68,7 @@ public class UserObject {
 	public boolean checkForFrequentQueries() {
 		for (SessionObject session : sessionList) {
 			if (session.checkForFrequency()) {
-				session.printSession();
+//				session.printSession();
 				return true;
 			}
 		}

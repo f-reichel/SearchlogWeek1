@@ -62,6 +62,7 @@ queries_on_day = function(queries, user, day) {
 #####
 
 #take a sample of users
+set.seed(1254);
 samplesize = 1000;
 sampleusers = sample(unique(queries$userId),samplesize)
 samplequeries = queries[queries$userId%in%sampleusers,]

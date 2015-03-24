@@ -33,12 +33,8 @@ public class SessionObject {
 	}
 
 	public void printSession() {
-		//System.out.println("User: " + list.get(0)[0] + "\t" + "Session: " + list.get(0)[1] + "\t" + "size: "
-		//		+ list.size());
 		for (QueryObject row : list) {
-			
 			System.out.println(row.printContent());
-			
 		}
 	}
 
