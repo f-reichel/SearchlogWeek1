@@ -20,13 +20,8 @@ import jdbc.DataSourceFactory;
 public class BotDetection {
 
 	private BufferedWriter bufferedWriterResults, bufferedWriterBots;
-	private Scanner scanner;
 	private FileWriter fileWriterResults, fileWriterBots;
-	private File inputFile, outputFileResults, outputFileBots;
-	private Timestamp prevTimestamp, curTimestamp;
-	private int prevUserID, curUserID, sessionID, counter;
-	private long timeGap, curEpoc, mins;
-	private double score;
+	private File outputFileResults, outputFileBots;
 	private static final String INPUT_PATH = "/home/pacman/Documents/UniR/MEI/WS1415/SearchlogAnalyse/AOL-user-ct-collection/"
 			+ "user-ct-test-collection-01.csv";
 	private static final String OUTPUT_PATH = "/home/pacman/Documents/UniR/MEI/WS1415/SearchlogAnalyse/AOL-user-ct-collection/"
@@ -44,6 +39,7 @@ public class BotDetection {
 	private boolean processFile = true;
 	private ArrayList<Integer> userIDs;
 	private static final int LIMIT = 50;
+	private int counter;
 
 	/**
 	 * @param args
@@ -71,10 +67,69 @@ public class BotDetection {
 		bufferedWriterBots = new BufferedWriter(fileWriterBots);
 
 		//readCSV(scanner);
-		queryDB(null);
+		generateUserDaysMatrix();
+//		queryDB(null);
 
 		bufferedWriterResults.close();
 		bufferedWriterBots.close();
+	}
+
+	private void generateUserDaysMatrix() throws SQLException {
+		ArrayList<Integer> IDs = getUserIds();
+		ArrayList<Date> dates = getDates();
+		int[][] matrix = new int[IDs.size()][dates.size()];
+		System.out.println(matrix.length + "," + matrix[0].length);
+		for (int i = 0; i < IDs.size(); i++) {
+			int userId = (int)IDs.get(i);
+			System.out.print(userId + ": ");
+			ResultSet tmpQueries = getQueriesForUser((int)IDs.get(i));
+			
+			for (int j = 0; j < dates.size(); j++) {
+				int value = queriesOnADay(tmpQueries, dates.get(j));
+				System.out.print(value + ",");
+				matrix[i][j] = value;
+				
+			}
+			System.out.println();
+		}
+	}
+	
+	private int queriesOnADay(ResultSet tmpQueries, Date date) throws SQLException {
+		int counter = 0;
+		while (tmpQueries.next()) {
+			Date tmpDate = tmpQueries.getDate(3);
+			//System.out.println(tmpDate);
+			//System.out.println(date);
+			if (date.equals(tmpDate)) {
+				counter++;
+			}
+		}
+		tmpQueries.beforeFirst();
+		return counter;
+	}
+
+	private ResultSet getQueriesForUser(int id) throws SQLException {
+		ResultSet queryResult = sqlStatement.executeQuery("select * from user_ct_test_collection_01 where userId = " + id + ";");
+		return queryResult;		
+	}
+
+	private ArrayList<Integer> getUserIds() throws SQLException {
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		resultSet = sqlStatement.executeQuery("select sampleusers from sample_users");
+		//resultSet = sqlStatement.executeQuery("select distinct userId from user_ct_test_collection_01");
+		while(resultSet.next()) {
+			list.add(resultSet.getInt(1));
+		}
+		return list;		
+	}
+	
+	private ArrayList<Date> getDates() throws SQLException {
+		ArrayList<Date> list = new ArrayList<Date>();
+		resultSet = sqlStatement.executeQuery("select distinct date(date) from user_ct_test_collection_01 order by date");
+		while(resultSet.next()) {
+			list.add(resultSet.getDate(1));
+		}
+		return list;		
 	}
 
 	private void queryDB(String sqlQuery) throws SQLException, IOException {

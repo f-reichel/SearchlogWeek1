@@ -1,7 +1,8 @@
 # start by loading in the data file you created
 #queries = read.table("/home/pacman/Documents/UniR/MEI/WS1415/SearchlogAnalyse/AOL-user-ct-collection/user-ct-test-collection-01.csv",header=TRUE,sep=",")
+Sys.time();
 queries = dbReadTable(conn = con,name = 'user_ct_test_collection_01');
-
+Sys.time();
 # We need to handle dates
 #set epoc GMT
 epoc = ISOdatetime(1970,1,1,0,0,0);
@@ -60,16 +61,17 @@ queries_on_day = function(queries, user, day) {
 #####
 # End of functions
 #####
-
+Sys.time();
 #take a sample of users
 set.seed(1254);
 samplesize = 1000;
-sampleusers = sample(unique(queries$userId),samplesize)
+sampleusers = sort(sample(unique(queries$userId),samplesize))
+Sys.time();
 samplequeries = queries[queries$userId%in%sampleusers,]
 
 # create a matrix user x days for counts
 daily_counts_mat = get_daily_counts(samplequeries,sampleusers,days);
-
+Sys.time();
 # create a vector of our data
 # we are really just flattening the data and losing the user information
 v= c(daily_counts_mat)
